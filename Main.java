@@ -36,7 +36,7 @@ public class Main {
                 listOfVariableValues.add(tempListInt);
             }
             for(char i : listOfVariables){
-                System.out.print("\n" + i + " ");
+                System.out.print("\n" + i + ": ");
                 tempListInt = new ArrayList<Integer>();
                 tempListInt = listOfVariableValues.get(counter);
                 counter++;
@@ -44,7 +44,9 @@ public class Main {
                     System.out.print(j);
                 }
             }
+            System.out.println();
             scanner.close();
+
             File file2 = new File(path2);
             scanner = new Scanner(file2);
             while(scanner.hasNextLine()){
@@ -54,11 +56,12 @@ public class Main {
             for(String i : listOfConstraints){
                 System.out.print("\n" + i);
             }
+            System.out.println();
             scanner.close();
+
         } catch (FileNotFoundException e) {
             System.out.println("An error occurred.");
             e.printStackTrace();
           }
-        
     }
 }
