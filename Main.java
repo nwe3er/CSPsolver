@@ -13,6 +13,8 @@ public class Main {
         ArrayList<Character> listOfVariables = new ArrayList<>();
         ArrayList<ArrayList<Integer>> listOfVariableValues = new ArrayList<>();
         ArrayList<String> listOfConstraints = new ArrayList<>();
+
+        // Testing purposes
         System.out.println(path1);
         System.out.println(path2);
         System.out.println(procedure);
