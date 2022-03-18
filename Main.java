@@ -21,8 +21,8 @@ public class Main {
 
         // create an instance of Search
         Search flag = new Search();
-        //String to hold returned value from Search
-        String CSP;
+        // list of String to hold returned values from Search
+        ArrayList<String> CSP;
 
         try{
             //opens scanner on variable file
@@ -77,13 +77,12 @@ public class Main {
             }
             // else use ForwardChecking
             else {
-                CSP =   CSP = flag.ForwardChecking(listOfConstraints, listOfVariables, listOfVariableValues);
+                CSP = flag.ForwardChecking(listOfConstraints, listOfVariables, listOfVariableValues);
                 System.out.println(CSP);
             }
 
-
         } catch (FileNotFoundException e) {
-            System.out.println("An error occurred.");
+            System.out.println("An error occurred, File could not be opened.");
             e.printStackTrace();
           }
     }
