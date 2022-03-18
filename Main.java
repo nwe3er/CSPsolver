@@ -17,7 +17,10 @@ public class Main {
         System.out.println(path2);
         System.out.println(procedure);
 
-        boolean forward_checking;
+        // create an instance of Search
+        Search flag = new Search();
+        //String to hold returned value from Search
+        String CSP;
 
         try{
             //opens scanner on variable file
@@ -42,7 +45,9 @@ public class Main {
                 System.out.print("\n" + i + ": ");
                 tempListInt = listOfVariableValues.get(counter);
                 counter++;
-                tempListInt.forEach(System.out::print);
+                for (Integer integer : tempListInt) {
+                    System.out.print(integer + " ");
+                }
             }
             System.out.println();
             scanner.close();
@@ -62,16 +67,17 @@ public class Main {
             // Convert the last argument to a lowercase
             String p = procedure.toLowerCase();
 
-            // if argument == none, set forward_checking to false
+            // if argument == none, use backTracking
             if(p.equals("none")) {
-                forward_checking = false;
-                // System.out.println(forward_checking);
+                CSP = flag.backTracking(listOfConstraints, listOfVariables, listOfVariableValues);
+                System.out.println(CSP);
+
             }
-            // else set it to true
+            // else use ForwardChecking
             else {
-                forward_checking = true;
+                CSP =   CSP = flag.ForwardChecking(listOfConstraints, listOfVariables, listOfVariableValues);
+                System.out.println(CSP);
             }
-            // System.out.println(forward_checking);
 
 
         } catch (FileNotFoundException e) {
