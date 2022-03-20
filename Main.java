@@ -10,6 +10,7 @@ public class Main {
         CSP csp = new CSP();
 
         // pass path1 to get variable info
-        csp.AssignVariable(path1);
+        csp.AssignVariable(path1, path2);
+
     }
 }

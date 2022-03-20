@@ -1,27 +1,26 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 
 // Class for the Variables
 public class Variable {
-    // stores Character of each letter
-    Character letter;
-    // stores the possible domain values for each Variable
-    ArrayList<Integer> domainValues = new ArrayList<Integer>();
+    char letter;                                                                // stores Character
+    ArrayList<Integer> domainValues = new ArrayList<>();                        // stores the possible domain values for each Variable
+    ArrayList<String> constraints = new ArrayList<>();
+    HashMap<Character,ArrayList<Integer>> varDom = new HashMap<>();             // hash map variables --> domains values
 
-    // assigns the letter and adds domains values for each letter
-    public char setVariables(String line) {
+    public char setVariables(String line) {                                     // assigns the letter and adds domains values for each letter
         letter = line.charAt(0);
 
-        // temp list to hold domain of each letter
-        ArrayList<Integer> tempDomainVal = new ArrayList<>();
+        ArrayList<Integer> tempDomainVal = new ArrayList<>();                   // temp list to hold domain of each letter
 
         // loop until the end of a line
         for (int i = 0; i < line.length(); i++) {
             if ((Character.isDigit(line.charAt(i)))) {
                 tempDomainVal.add(Integer.parseInt(String.valueOf(line.charAt(i))));
             }
+            // assign domain values
             domainValues = tempDomainVal;
         }
-        // return letter
-        return letter;
+        return letter;                                                          // return letters
     }
 }
