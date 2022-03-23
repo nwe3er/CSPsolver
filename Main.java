@@ -9,7 +9,9 @@ public class Main {
         String path1 = args[0];
         String path2 = args[1];
         String procedure = args[2];
-        boolean is_fc;
+
+        boolean no_fc;                                                  // procedure mode
+        Stack<String> assign = new Stack<>();                   // stores returned assignment
 
         // create CSP/ Search instances
         CSP csp = new CSP();
@@ -19,9 +21,20 @@ public class Main {
         csp.AssignVariable(path1, path2);
 
         // check procedure mode
-        is_fc = procedure.equalsIgnoreCase("none");
+        no_fc = procedure.equalsIgnoreCase("none");
 
-        if(is_fc) obj.backtracking(CSP.variableData);
+        // if no fc, call backtracking and print the assignment solution
+        if(no_fc) {
+            assign = obj.backtracking(CSP.variableData);
+
+            System.out.print(String.valueOf(assign.size()) + ".  ");
+            for (int i = 0; i < assign.size(); i++) {
+                System.out.print(assign.get(i));
+                if (i != assign.size() -1) System.out.print(", ");
+            }
+            System.out.print("  " + "solution");
+        }
+
 
 
 
@@ -79,7 +92,7 @@ class CSP {
     }
 
     // method to see if an assignment is complete
-    static boolean isComplete(ArrayList<String> assignment) {
+    static boolean isComplete(Stack<String> assignment) {
         int count1 = 0;                                                         // counter
 
         // loop through the assignment to see if each variable is assigned
@@ -100,21 +113,32 @@ class CSP {
 
     // method to return the most constraining variable heuristic
     static char mcv (ArrayList<Variable> csp) {
-        int constraintValue = csp.get(0).domainValues.size();               // set constraintValue to first letters domain size
+        int constraintValue = csp.get(0).domainValues.size();                   // set constraintValue to first letters domain size
         int count = 0;
 
         // loop through the variable data and find mcv
         for (int i = 1; i < csp.size(); i++) {
-
-            if (csp.get(i).domainValues.size() < constraintValue) count = i;
+            if (!csp.get(i).assignment)
+                if (csp.get(i).domainValues.size() < constraintValue) count = i;
         }
 
-        return csp.get(count).letter;                    // return the variable
+        return csp.get(count).letter;                                           // return the variable
     }
 
-    static  String UnAssignedVar(ArrayList<String> assignment, ArrayList<Variable> csp) {
+    // method to return an un assigned variable
+    static  char UnAssignedVar(Stack<String> assignment, ArrayList<Variable> csp) {
+        char c = mcv(csp);                                                      // get the mcv
 
-        return "";
+        if (assignment.isEmpty()) {
+            for(int i = 0; i < CSP.variableData.size(); i++) {
+                if (CSP.variableData.get(i).letter == c){
+                    CSP.variableData.get(i).assignment = true;
+                }
+            }
+            return c;                                                           // return mcv if assignment is empty
+        }
+
+        return 'c';
     }
 
 }
@@ -124,6 +148,7 @@ class Variable {
     char letter;                                                      // stores Character
     ArrayList<Integer> domainValues = new ArrayList<>();              // stores the possible domain values for each Variable
     ArrayList<String[]> constraints = new ArrayList<>();              // stores the constraints for each variable
+    boolean assignment = false;                                       // flag to see if variable is assigned
 
     public void setVariables(String line) {                           // assigns the letter and adds domains values for each letter
         letter = line.charAt(0);
@@ -135,8 +160,7 @@ class Variable {
             if ((Character.isDigit(line.charAt(i)))) {
                 tempDomainVal.add(Integer.parseInt(String.valueOf(line.charAt(i))));
             }
-            // assign domain values
-            domainValues = tempDomainVal;
+            domainValues = tempDomainVal;                             // assign domain values
         }
     }
 }
@@ -160,20 +184,26 @@ class Constraints {
 // search class
 class Search {
     // method that does not use forward checking
-    ArrayList<String> backtracking(ArrayList<Variable> variableData) {
-        ArrayList<String> assignment = new ArrayList<>();
+    Stack<String> backtracking(ArrayList<Variable> variableData) {
+       // ArrayList<String> assignment = new ArrayList<>();
+        Stack<String> assignment = new Stack<>();
 
         return recursiveBacktracking(assignment, variableData);
     }
+    // recursive method
+    private Stack<String> recursiveBacktracking(Stack<String> assignment, ArrayList<Variable> variableData) {
+        int count = 0;
+        if (CSP.isComplete(assignment)) return assignment;           // if the assignment is complete, return the assignment
 
-    private ArrayList<String> recursiveBacktracking(ArrayList<String> assignment, ArrayList<Variable> variableData) {
-        // see if the assignment is complete
-        if (CSP.isComplete(assignment)) return assignment;
+        char var = CSP.UnAssignedVar(assignment, variableData);      // select an unassigned variable
 
-        // get the mcv
-        char variable = CSP.mcv(variableData);
+        for (int i = 0; i < variableData.size(); i ++) {
+            if(variableData.get(i).letter == var) count = i;
+        }
 
-        String s = CSP.UnAssignedVar(assignment, variableData);
+        // Apply the constraint check here  ----> before adding to the assignment list
+
+        assignment.add(variableData.get(count).letter + " = " + variableData.get(count).domainValues.get(0).toString());
 
         return assignment;
     }
